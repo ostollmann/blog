@@ -1,0 +1,62 @@
+/* general style */
+body    { font-family: Verdana, Arial, sans-serif;
+          margin: 0; padding: 0; }
+
+.blogtitle  { font-size: 140%; font-family: "Courier New"; color: #000;}
+
+h1          { font-size: 160%; }
+
+/* layout elements */
+div.navigation              { font-size: 14px; }
+div.container               { width: 700px; margin-left: 20px; margin-top: 20px;}
+div.header, div.navigation  { height: 25px; margin-bottom: 20px; }
+div.body                    { clear: both; }
+div.footer                  { margin-top: 50px; font-size: 14px; color: #000;}
+div.footer p                { margin: 0; }
+
+/* margins and stuff */
+p, div.line-block, ul, ol, pre,
+    table                       { margin: 25px 0 25px 0; }
+dt                              { margin: 25px 0 16px 0; padding: 0; }
+dd                              { margin: 16px 0 25px 40px; padding: 0; }
+ul ol, ol ul, ul ul, ol ol      { margin: 10px 0; padding: 0 0 0 40px; }
+li                              { padding: 0; }
+h1 + p.date                     { font-size: 14px; margin-top: -5px; font-style: italic; }
+
+/* code formatting.  no monospace because of webkit (bug?) */
+pre, code, tt   { font-family: 'Consolas', 'Deja Vu Sans Mono',
+                  'Bitstream Vera Sans Mono', 'Monaco', 'Courier New';
+                  font-size: 0.82em; }
+pre             { line-height: 1.3; border: 1px solid #ddd; padding: 10px;
+                  background: #fafafa; }
+code, tt        { background: #eee; }
+
+/* tables */
+table           { border: 1px solid #ddd; border-collapse: collapse;
+                  background: #fafafa; }
+td, th          { padding: 2px 12px; border: 1px solid #ddd; }
+
+/* footnotes */
+table.footnote          { margin: 15px 0; background: transparent; border: none; }
+table.footnote td       { border: none; padding: 9px 0 0 0; font-size: 15px; }
+table.footnote td.label { padding-right: 10px; }
+table.footnote td p     { margin: 0; }
+table.footnote td p + p { margin-top: 15px; }
+
+/* blog overview */
+
+/* other alignment things */
+img.align-center        { margin: 15px auto; display: block; }
+
+/* pagination */
+div.pagination          { margin: 36px 0 0 0; text-align: center; }
+div.pagination strong   { font-weight: normal; font-style: italic; }
+
+/* tags */
+p.tags          { font-size: 14px; font-style: italic; }
+ul.tagcloud     { font-size: 16px; margin: 36px 0; padding: 0;
+                  list-style: none; }
+ul.tagcloud li  { margin: 0; padding: 0 10px; display: inline; }
+
+/* latex math */
+span.math img   { margin-bottom: -7px; }

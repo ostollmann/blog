@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title type="text">Recent Blog Posts</title>
+  <id>http://blog.o1iver.net/feed.atom</id>
+  <updated>2011-03-06T00:00:00Z</updated>
+  <link href="http://blog.o1iver.net/" />
+  <link href="http://blog.o1iver.net/feed.atom" rel="self" />
+  <subtitle type="text">Recent blog posts</subtitle>
+  <generator>Werkzeug</generator>
+  <entry xml:base="http://blog.o1iver.net/feed.atom">
+    <title type="text">Welcome to the real world</title>
+    <id>http://blog.o1iver.net/2011/3/1/welcome-to-the-real-world</id>
+    <updated>2011-03-01T00:00:00Z</updated>
+    <link href="http://blog.o1iver.net/2011/3/1/welcome-to-the-real-world" />
+    <author>
+      <name>Oliver Stollmann</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;strong&gt;How different is studying and working? Well I am about to find out.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;About three weeks ago I got an offer to do a three month internship at ABB in Baden Switzerland and today is my first day!&lt;/p&gt;
+&lt;p&gt;I am excited, to say the least. After setting three alarms last night I still couldn.t sleep well, waking up several times to check if it wasn.t already too late. I even woke up after dreaming that I had sleept the whole day and it was already Wednesday.&lt;/p&gt;
+&lt;p&gt;Thankfully I did wake up at 6.40, albeit quite tired. Then the real fun started: what the hell am I going to wear? I usually couldn.t care less, as people who have seen me in lectures wearing a tracksuit and flip-flops will tell you, but today I ended up trying three different sweaters and even a shirt. In the end I kept it simple, opting for jeans and a t-shirt. Hopefully that isn.t going to backfire. My mum said I should wear slacks and a shirt, but firstly they aren.t as comfortable and secondly I am going to be working as a (wannabe)-engineer and as such hidden somewhere deep inside, miles from any customers.&lt;/p&gt;
+&lt;p&gt;Now I am sitting in the train, about to arrive 30 minutes early and psyched as hell. This is after all the first time I will be doing meaningful paid work for a big company and also the first time I will be making enough money to support myself (and that is a great feeling)!&lt;/p&gt;
+&lt;p&gt;Let.s see how this goes :-)&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Disclaimer: The opinions on this blog (http://blog.o1iver.net) are mine (Oliver Stollmann) and only mine and do not in any way reflect the views of my new employer (ABB Switzerland).&lt;/em&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry xml:base="http://blog.o1iver.net/feed.atom">
+    <title type="text">Welcome to the real world, ie. working for ABB</title>
+    <id>http://blog.o1iver.net/2011/3/6/welcome-to-the-real-world-working-for-abb</id>
+    <updated>2011-03-06T00:00:00Z</updated>
+    <link href="http://blog.o1iver.net/2011/3/6/welcome-to-the-real-world-working-for-abb" />
+    <author>
+      <name>Oliver Stollmann</name>
+    </author>
+    <content type="html">&lt;div class="section" id="welcome-to-the-real-world-ie-working-for-abb"&gt;
+&lt;h2&gt;Welcome to the real world, ie. working for ABB&lt;/h2&gt;
+&lt;p&gt;So I have survived my first week in the ...real-world. :-). And surprisingly it wasn.t that bad.&lt;/p&gt;
+&lt;p&gt;I am working in a small group of about 12 people, focused on modelling industrial plants and then developing industrial controlling/automation software (which then runs on tiny computers and controller.s cement production plants, nuclear reactors or as in my case Waste-To-Energy incineration plants). The people are super-nice, interesting, very welcoming and very helpful.&lt;/p&gt;
+&lt;p&gt;On the first day I was given a desk with a desktop PC running Windows XP and a big 23 inch display (nice :-) ). I was shown where to get (free) coffee. I was given my badge. I must say that I proudly walk around with that badge. I am very proud to work for a company like ABB. They are a global leader in the energy field and I feel honoured to be able to contribute to that, albeit on a tiny-tiny-tiny scale. So what were the surprises?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="real-useful-work"&gt;
+&lt;h2&gt;1). Real useful work&lt;/h2&gt;
+&lt;p&gt;From the very first minute I did real work and I don.t mean getting coffee for everybody so that they can do real work better, I really mean real work. I don.t really want to talk in too much depth about what I did (not too sure what the rules about that kind of stuff is), but I can tell you that if I hadn.t done it it would have had to be done by somebody else.&lt;/p&gt;
+&lt;p&gt;So the big surprise is that from the first minute on I have only been doing things that are actually going to be used and let me tell you that is both a thrill and a pretty scary thing. I am currently working on a model that will actually be used in real plants and there is constantly a little voice in the back of my head saying: ...if you fuck this up, people may really lose money/get hurt.. But that risk is worth it and I guess that is how the real world works, if you fuck up it will hurt people (emotionally, physically, financially, whatever).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="luxury-working-conditions"&gt;
+&lt;h2&gt;2). Luxury working conditions&lt;/h2&gt;
+&lt;p&gt;From the first minute I was impressed by the great working conditions. Free coffee, cheap food, breaks whenever you want, come early/go early, come late/go late, big computer screens (although that is just for developers :-) ).&lt;/p&gt;
+&lt;p&gt;I even have a height-adjustable desk. And that is probably one of the most useful office features I have ever seen. Sitting in a chair for 10 hours can make you quite tired/restless, so whenever I feel tired I just get up, press the up button and can then keep working whilst standing up. Something like this:&lt;/p&gt;
+&lt;img alt="http://www.interlineuk.com/5011s2006.jpg" src="http://www.interlineuk.com/5011s2006.jpg" style="width: 400px;" /&gt;
+&lt;p&gt;Everything is done to allow you to work effectively. When something goes wrong with your computer or the ever-breaking-I-hate-it Lotus Notes, you call tech support and they can access your computer while you watch.&lt;/p&gt;
+&lt;p&gt;There are also lots of other things not really worth talking about in detail: printing (with automatic stapling :-)), lockers, etc.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="but-it-is-still-a-huge-company"&gt;
+&lt;h2&gt;3). (But it is still a) huge company&lt;/h2&gt;
+&lt;p&gt;Although everything is done to enable you to concentrate on working one can still feel that it is a big company.&lt;/p&gt;
+&lt;div class="section" id="example-setting-up-email"&gt;
+&lt;h3&gt;Example: setting up Email&lt;/h3&gt;
+&lt;p&gt;To set-up an email account somebody else must request an account. He then receives an email with some instructions and the second half of the default password. You must then wait for tech support to contact you and set-up the Notus Lotes client. Whilst he does so you have to be there to constantly enter your half of the password when he wants to change settings. So things that could probably be done in 25 seconds with a bash script and Gmail, takes up about 30 minutes of an existing employees time and one hour of mine.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="example-meetings"&gt;
+&lt;h3&gt;Example: meetings&lt;/h3&gt;
+&lt;p&gt;There are constantly people walking around the place, going from meeting to meeting. This must take up an enormous amount of time. Whenever more than 2-3 people want to discuss something a meeting room is booked, a time set, invitation emails sent you, etc. It seems like an enormous effort for a tiny bit of actually useful work.&lt;/p&gt;
+&lt;p&gt;I actually sat in on a meeting on the first day and I could hardly stay awake. I already hate meetings. Although I can imagine that they go quite well there is so much confusion and repetition that it is actually physically painful to watch. Questions and misunderstood, answer misinterpreted, then everything is repeated, minutes are written, etc. big big bureaucracy.&lt;/p&gt;
+&lt;p&gt;I am not sure how this problem can be solved, because it is indeed critical for people to meet and discuss issues/projects, but damn does it feel inefficient.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="example-software"&gt;
+&lt;h3&gt;Example: software&lt;/h3&gt;
+&lt;p&gt;This is probably the only mind-blowing and very surprising thing that has happened to me so-far. I am currently working with some software that is developed in-house. So I thought that I would be able to install it locally, play around with it, read the user-guide etc. But, alas, no! If I want to use the software locally our department must buy a licence from the unit that produces the software. And I am not talking about 20-200 bucks, this is 5 figures (after company-internally subsidy). Crazy you think? I agree.&lt;/p&gt;
+&lt;p&gt;So currently I am working with the software running in a virtual machine off of a USB-hard-drive, because even copying the virtual machine to my local machine would break the licence agreement. I also do not have a user-guide for some reason and getting one seems impossible.&lt;/p&gt;
+&lt;p&gt;Although I understand the theory of company-internal competition increasing productivity etc, this goes way over the top. I mean especially software, where distribution costs is zero (copy from a network share and go).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion:&lt;/h2&gt;
+&lt;p&gt;ABB is a great company to work for. Although this may not be the case if feels quite flexible, the working conditions are (mostly) great and you immediately feel useful (most important to me).&lt;/p&gt;
+&lt;p&gt;Most importantly the people are great!&lt;/p&gt;
+&lt;p&gt;I am happy for now :-)&lt;/p&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+</feed>
+

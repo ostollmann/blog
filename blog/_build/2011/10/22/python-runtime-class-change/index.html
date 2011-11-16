@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Python: Runtime type (class) changes | Oliver Stollmann's sudo rm -rf /</title>
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+    <link href="http://o1iver.net/media/pygments.css" rel="stylesheet" type="text/css">
+    <link href="/static/style.css" rel="stylesheet" type="text/css">
+    <link rel="alternate" href="/feed.atom" title="Recent Blog Posts" type="application/atom+xml">
+    <link rel="stylesheet" href="/static/_pygments.css" type="text/css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="blogtitle">Oliver's Backward Induction</span>
+        </div>
+        <div class="navigation">[
+            <a href="/">blog</a>, 
+            <a href="/archive/">archive</a>, 
+            <a href="/tags/">tags</a>,
+            <a href="/feed.atom" rel="alternate" title="Oliver's Backward Induction - Recent Posts">feed</a>, 
+            <a href="http://o1iver.net/">homepage</a>]
+        </div>
+        <div class="body">
+  <h1 class="title">Python: Runtime type (class) changes</h1>
+
+  
+  <p class=date>written on Saturday, October 22, 2011
+  
+
+  <p><em>Not much need to explain here, just check out the example (I am changing the class of the object at runtime).</em></p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Female</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">intro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Hi, I am </span><span class="si">%s</span><span class="s"> and I am a woman!&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Male</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+     <span class="k">def</span> <span class="nf">intro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">print</span><span class="p">(</span><span class="s">&quot;Hi, I am </span><span class="si">%s</span><span class="s"> and I am a man!&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+<p>Let's try it!</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;</span> <span class="n">me</span> <span class="o">=</span> <span class="n">Male</span><span class="p">(</span><span class="s">&quot;Oliver Stollmann&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="n">me</span><span class="o">.</span><span class="n">intro</span><span class="p">()</span>
+<span class="n">Hi</span><span class="p">,</span> <span class="n">I</span> <span class="n">am</span> <span class="n">Oliver</span> <span class="n">Stollmann</span> <span class="ow">and</span> <span class="n">I</span> <span class="n">am</span> <span class="n">a</span> <span class="n">man</span><span class="err">!</span>
+<span class="o">&gt;&gt;</span> <span class="n">me</span><span class="o">.</span><span class="n">__class__</span> <span class="o">=</span> <span class="n">Female</span>
+<span class="o">&gt;&gt;</span> <span class="n">me</span><span class="o">.</span><span class="n">intro</span><span class="p">()</span>
+<span class="n">Hi</span><span class="p">,</span> <span class="n">I</span> <span class="n">am</span> <span class="n">Oliver</span> <span class="n">Stollmann</span> <span class="ow">and</span> <span class="n">I</span> <span class="n">am</span> <span class="n">a</span> <span class="n">woman</span><span class="err">!</span>
+</pre></div>
+
+
+  
+  <p class=tags>Tags: [
+    
+      <a href="/tags/love/">love</a>, 
+      <a href="/tags/meta/">meta</a>, 
+      <a href="/tags/programming/">programming</a> , 
+      <a href="/tags/python/">python</a>
+    ]
+  
+</div>
+        <div class="footer">
+            <p> &copy; Copyright 2011 Oliver Stollmann.
+            <p> Contact me 
+                <a href="http://o1iver.net/info.txt">directly</a> or via 
+                <a href="http://facebook.com/stollmann">facebook</a>,   
+                <a href="https://plus.google.com/117321259323890073987">google+</a>, 
+                <a href="http://github.com/o1iver">github</a>, 
+                <a href="http://bitbucket.org/o1iver">bitbucket</a>.
+        </div>
+    </div>
+</body>
+</html>
+
+

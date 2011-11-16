@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    {% block htmlhead -%}
+    <title>{% block title %}Home{% endblock %} | Oliver Stollmann's sudo rm -rf /</title>
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+    <link href="http://o1iver.net/media/pygments.css" rel="stylesheet" type="text/css">
+    <link href="/static/style.css" rel="stylesheet" type="text/css">
+    <link rel="alternate" href="/feed.atom" title="Recent Blog Posts" type="application/atom+xml">
+    {%- for link in links %}
+    <link rel="{{ link.rel }}" href="{{ link.href }}"{% if link.media %} media="{{ link.media }}" {% endif %} type="{{ link.type }}">
+    {%- endfor -%}
+    {%- endblock %}
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="blogtitle">Oliver's Backward Induction</span>
+        </div>
+        <div class="navigation">[
+            <a href="/">blog</a>, 
+            <a href="/archive/">archive</a>, 
+            <a href="/tags/">tags</a>,
+            <a href="/feed.atom" rel="alternate" title="Oliver's Backward Induction - Recent Posts">feed</a>, 
+            <a href="http://o1iver.net/">homepage</a>]
+        </div>
+        <div class="body">
+            {%- block body -%}{%- endblock -%}
+        </div>
+        <div class="footer">
+            <p> &copy; Copyright {{ format_date(format='YYYY') }} Oliver Stollmann.
+            <p> Contact me 
+                <a href="http://o1iver.net/info.txt">directly</a> or via 
+                <a href="http://facebook.com/stollmann">facebook</a>,   
+                <a href="https://plus.google.com/117321259323890073987">google+</a>, 
+                <a href="http://github.com/o1iver">github</a>, 
+                <a href="http://bitbucket.org/o1iver">bitbucket</a>.
+        </div>
+    </div>
+</body>
+</html>
+
+

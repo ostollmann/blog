@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Python: Handling &#39;plain/text&#39; (plain) and &#39;application/x-gzip&#39; (gzipped) HTTP response MIME types on the fly | Oliver Stollmann's sudo rm -rf /</title>
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+    <link href="http://o1iver.net/media/pygments.css" rel="stylesheet" type="text/css">
+    <link href="/static/style.css" rel="stylesheet" type="text/css">
+    <link rel="alternate" href="/feed.atom" title="Recent Blog Posts" type="application/atom+xml">
+    <link rel="stylesheet" href="/static/_pygments.css" type="text/css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="blogtitle">Oliver's Backward Induction</span>
+        </div>
+        <div class="navigation">[
+            <a href="/">blog</a>, 
+            <a href="/archive/">archive</a>, 
+            <a href="/tags/">tags</a>,
+            <a href="/feed.atom" rel="alternate" title="Oliver's Backward Induction - Recent Posts">feed</a>, 
+            <a href="http://o1iver.net/">homepage</a>]
+        </div>
+        <div class="body">
+  <h1 class="title">Python: Handling 'plain/text' (plain) and 'application/x-gzip' (gzipped) HTTP response MIME types on the fly</h1>
+
+  
+  <p class=date>written on Friday, August 26, 2011
+  
+
+  <p>So today I had a problem that a certain data provider would return either plain text or gziped data depending on the size of the content. The thing was that you didn't know beforehand. So here is how you handle these two datatype on the fly (note: I am using the requests library instead of urllib/urllib2/httplib):</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">gzip</span>
+<span class="kn">from</span> <span class="nn">cStringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">extension</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">logged_in</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">download_path</span> <span class="o">+</span> <span class="s">&#39;?&#39;</span>
+                    <span class="o">+</span> <span class="p">(</span><span class="n">query</span> <span class="o">%</span> <span class="n">extension</span><span class="p">)</span> <span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Downloaded data of type: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&quot;content-type&quot;</span><span class="p">])</span>
+
+    <span class="c"># Handle gzipped data</span>
+    <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&quot;content-type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;application/x-gzip&quot;</span><span class="p">:</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s">&quot;rb&quot;</span><span class="p">,</span> <span class="n">fileobj</span><span class="o">=</span><span class="n">buf</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+
+    <span class="c"># Handle plain text</span>
+    <span class="k">elif</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&quot;content-type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;text/plain&quot;</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">content</span>
+
+    <span class="c"># Raise value error in case of other mime type</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="s">&quot;Received data of invalid type &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&quot;content-type&quot;</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">parse_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+
+
+  
+  <p class=tags>Tags: [
+    
+      <a href="/tags/mime/">mime</a>, 
+      <a href="/tags/programming/">programming</a> , 
+      <a href="/tags/python/">python</a>
+    ]
+  
+</div>
+        <div class="footer">
+            <p> &copy; Copyright 2011 Oliver Stollmann.
+            <p> Contact me 
+                <a href="http://o1iver.net/info.txt">directly</a> or via 
+                <a href="http://facebook.com/stollmann">facebook</a>,   
+                <a href="https://plus.google.com/117321259323890073987">google+</a>, 
+                <a href="http://github.com/o1iver">github</a>, 
+                <a href="http://bitbucket.org/o1iver">bitbucket</a>.
+        </div>
+    </div>
+</body>
+</html>
+
+

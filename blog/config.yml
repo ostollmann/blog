@@ -1,0 +1,7 @@
+active_modules: [pygments, tags, blog, latex]
+author: Oliver Stollmann
+canonical_url: http://blog.o1iver.net/
+modules:
+    pygments:
+        style: tango
+

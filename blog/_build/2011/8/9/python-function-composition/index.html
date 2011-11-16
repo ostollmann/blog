@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Python: Function Composition | Oliver Stollmann's sudo rm -rf /</title>
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+    <link href="http://o1iver.net/media/pygments.css" rel="stylesheet" type="text/css">
+    <link href="/static/style.css" rel="stylesheet" type="text/css">
+    <link rel="alternate" href="/feed.atom" title="Recent Blog Posts" type="application/atom+xml">
+    <link rel="stylesheet" href="/static/_pygments.css" type="text/css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="blogtitle">Oliver's Backward Induction</span>
+        </div>
+        <div class="navigation">[
+            <a href="/">blog</a>, 
+            <a href="/archive/">archive</a>, 
+            <a href="/tags/">tags</a>,
+            <a href="/feed.atom" rel="alternate" title="Oliver's Backward Induction - Recent Posts">feed</a>, 
+            <a href="http://o1iver.net/">homepage</a>]
+        </div>
+        <div class="body">
+  <h1 class="title">Python: Function Composition</h1>
+
+  
+  <p class=date>written on Tuesday, August 9, 2011
+  
+
+  <p>If you know basic mathematics function composition will seem like a very simple and obvious thing. You are applying one function and then applying that function's result to another function.</p>
+<p><em>Note: for this to work the return value(s) of the inner function must match the input expected by the outer function.</em></p>
+<p>The ability to compose functions is used mostly in functional programming languages (it is even one of the main points of Monads).</p>
+<p>So how do you compose functions in Python? Well I think there is actually a built-in compose function, but I thought I would build one myself.</p>
+<p>Composing two functions:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">comp2</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">f1</span><span class="p">(</span><span class="n">f2</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+</pre></div>
+<p>Composing many functions:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">comp</span><span class="p">(</span><span class="o">*</span><span class="n">funcs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">funcs</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;need at least two functions to compose&#39;</span><span class="p">)</span>
+    <span class="c"># reverse funcs</span>
+    <span class="n">funcs</span> <span class="o">=</span> <span class="n">funcs</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c"># list of composed functions (to avoid recursion problems)</span>
+<span class="n">composed</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c"># add last function</span>
+<span class="n">composed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">funcs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c"># we cannot use a for func in funcs here because of scope</span>
+<span class="c"># problems (will recurse infinitely)</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">while</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">funcs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">composed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comp2</span><span class="p">(</span><span class="n">funcs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">composed</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">return</span> <span class="n">composed</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+
+  
+  <p class=tags>Tags: [
+    
+      <a href="/tags/functional/">functional</a>, 
+      <a href="/tags/programming/">programming</a> , 
+      <a href="/tags/python/">python</a>
+    ]
+  
+</div>
+        <div class="footer">
+            <p> &copy; Copyright 2011 Oliver Stollmann.
+            <p> Contact me 
+                <a href="http://o1iver.net/info.txt">directly</a> or via 
+                <a href="http://facebook.com/stollmann">facebook</a>,   
+                <a href="https://plus.google.com/117321259323890073987">google+</a>, 
+                <a href="http://github.com/o1iver">github</a>, 
+                <a href="http://bitbucket.org/o1iver">bitbucket</a>.
+        </div>
+    </div>
+</body>
+</html>
+
+

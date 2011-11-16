@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Python: Caching referentially transparent functions | Oliver Stollmann's sudo rm -rf /</title>
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+    <link href="http://o1iver.net/media/pygments.css" rel="stylesheet" type="text/css">
+    <link href="/static/style.css" rel="stylesheet" type="text/css">
+    <link rel="alternate" href="/feed.atom" title="Recent Blog Posts" type="application/atom+xml">
+    <link rel="stylesheet" href="/static/_pygments.css" type="text/css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="blogtitle">Oliver's Backward Induction</span>
+        </div>
+        <div class="navigation">[
+            <a href="/">blog</a>, 
+            <a href="/archive/">archive</a>, 
+            <a href="/tags/">tags</a>,
+            <a href="/feed.atom" rel="alternate" title="Oliver's Backward Induction - Recent Posts">feed</a>, 
+            <a href="http://o1iver.net/">homepage</a>]
+        </div>
+        <div class="body">
+  <h1 class="title">Python: Caching referentially transparent functions</h1>
+
+  
+  <p class=date>written on Saturday, November 5, 2011
+  
+
+  <p>Because such a function will always produce the same output given a same input, it is quite easy to cache.</p>
+<p><em>Note: this is an illustration, with shortcomings. For example: calling a function with named arguments in different orders will cause a cache miss, although this is still an equivalent call.</em></p>
+<div class="highlight"><pre><span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">def</span> <span class="nf">cached</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">cache</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="nb">str</span><span class="p">((</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">cache</span><span class="p">[</span><span class="nb">str</span><span class="p">((</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))]</span> <span class="o">=</span> <span class="n">res</span>
+            <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+<span class="nd">@cached</span>
+<span class="k">def</span> <span class="nf">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+
+<span class="nd">@cached</span>
+<span class="k">def</span> <span class="nf">make_full_name</span><span class="p">(</span><span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">))</span>
+</pre></div>
+
+
+  
+  <p class=tags>Tags: [
+    
+      <a href="/tags/caching/">caching</a>, 
+      <a href="/tags/decorator/">decorator</a> , 
+      <a href="/tags/python/">python</a>
+    ]
+  
+</div>
+        <div class="footer">
+            <p> &copy; Copyright 2011 Oliver Stollmann.
+            <p> Contact me 
+                <a href="http://o1iver.net/info.txt">directly</a> or via 
+                <a href="http://facebook.com/stollmann">facebook</a>,   
+                <a href="https://plus.google.com/117321259323890073987">google+</a>, 
+                <a href="http://github.com/o1iver">github</a>, 
+                <a href="http://bitbucket.org/o1iver">bitbucket</a>.
+        </div>
+    </div>
+</body>
+</html>
+
+

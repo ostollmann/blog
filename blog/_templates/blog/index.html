@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}Blog{% endblock %}
+{% block body %}
+
+  {%- for entry in pagination.get_slice() %}
+  <div class=entry-overview>
+    <div class=detail>
+      <p>
+        <a href="{{ link_to('page', slug=entry.slug) }}">{{ entry.title }}</a>
+      <span class="date">
+          [{{ format_date(entry.pub_date, format='medium') }}]
+      </span>
+    </div>
+  </div>
+  {%- endfor %}  
+
+  {% if show_pagination and pagination.pages > 1 %}
+    {{ pagination }}
+  {% endif %} 
+{% endblock %}
