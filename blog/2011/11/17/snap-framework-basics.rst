@@ -79,3 +79,85 @@ What does this mean? Well *rqPathInfo* return the request's URI's path part that
 
 But to get back to the point of how to handle different request headers: what this is meant to show is that you can chain different types of request checks to route a request to the correct handler.
 
+Complete routing example
+------------------------
+
+Here is a complete routing and handling example for an application that I am currently developing:
+
+.. sourcecode:: haskell
+    
+    indexHandler = ifTop ( method GET  indexHandler'
+                       <|> genericError 405 "Method Not Allowed"
+                   )
+               <|> error404 -- will catch any routing error (even for other request
+                             -- URIs as this is the fallback route "/")
+    
+    generateHandler = ifTop ( method GET generateHandler'
+                          <|> error405
+                      )
+                      
+    registeredHandler = ifTop ( method GET registeredHandler'
+                            <|> error405
+                        )
+    
+    indexHandler' = do
+      -- application logic
+      writeBS $ B.pack "index page"
+    
+    generateHandler'  = do
+      expr <- fromMaybe "" <$> getParam "expr"\
+      -- application logic
+      writeBS $ append (B.pack "API.generate: ") expr
+    
+    registeredHandler' = do
+      domain <- fromMaybe "" <$> getParam "domain"
+      -- application logic
+      writeBS $ append (B.pack "API.registered: ") domain
+    
+    error404 = genericError 404 "Not Found"
+    error405 = genericError 405 "Method Not Allowed"
+    
+    genericError c s = do
+      modifyResponse $ setResponseStatus c $ B.pack s
+      writeBS $ B.pack ((show c) ++ " - " ++ s)
+      r <- getResponse
+      finishWith r
+    
+    ------------------------------------------------------------------------------
+    -- | The main entry point handler.
+    site :: Application ()
+    site = route [ ("/"                           , indexHandler)
+                 , ("/api/generate/:expr/"        , generateHandler)
+                 , ("/api/registered/:domain/"    , registeredHandler)
+                 ]
+           <|> serveDirectory "resources/static"
+
+As you can see these handlers combine both *method* and *ifTop* to check whether a request's HTTP method is right and whether or not the request URI contains additional unwanted path segements. Here are a few examples of requests and the server's response:
+
+::
+    request:  GET /
+    response: HTTP/1.1 200 OK
+              index page
+
+    request:  POST /
+    response: HTTP/1.1 405 Method Not Allowed
+              405 - Method Not Allowed
+
+    request:  GET /api/
+    response: HTTP/1.1 404 Not Found
+              404 - Not Found
+
+    request:  POST /api/
+    response: HTTP/1.1 404 Not Found
+              404 - Not Found
+
+    request:  GET /api/generate/abc
+    response: HTTP/1.1 200 OK
+              API.generate: abc
+
+    request:  PUT /api/registered/google.com
+    response: HTTP/1.1 405 Method Not Allowed
+              405 - Method Not Allowed
+
+
+
