@@ -159,5 +159,20 @@ As you can see these handlers combine both *method* and *ifTop* to check whether
     response: HTTP/1.1 405 Method Not Allowed
               405 - Method Not Allowed
 
+Although the above method works as intended it is not as `DRY <http://en.wikipedia.org/wiki/Don't_repeat_yourself>`_ as possible. Because the route function takes a handler as an argument we can actually do the *ifTop* and *method* checks in the route definition (and declare a *methodOrError405* helper function):
+
+.. sourcecode:: haskell
+    
+    methodOrError405 :: Method -> Application () -> Application ()
+    methodOrError405 m a = method m a
+                       <|> error405
+    
+    site :: Application ()
+    site = route [ ("/"                           , ifTop indexHandler)
+                 , ("/api/generate/:expr/"        , ifTop (methodOrError405 GET generateHandler'))
+                 , ("/api/registered/:domain/"    , ifTop (methodOrError405 GET registeredHandler'))
+                 ]
+           <|> serveDirectory "resources/static"
 
 
+This produces the exact same results as above. *Note that we no longer define the handler as fooBar, but rather at fooBar' directly (without the checks).*
