@@ -168,9 +168,9 @@ Although the above method works as intended it is not as `DRY <http://en.wikiped
                        <|> error405
     
     site :: Application ()
-    site = route [ ("/"                           , ifTop indexHandler)
-                 , ("/api/generate/:expr/"        , ifTop (methodOrError405 GET generateHandler'))
-                 , ("/api/registered/:domain/"    , ifTop (methodOrError405 GET registeredHandler'))
+    site = route [ ("/"                           , ifTop indexHandler                               )
+                 , ("/api/generate/:expr/"        , ifTop (methodOrError405 GET generateHandler'  )  )
+                 , ("/api/registered/:domain/"    , ifTop (methodOrError405 GET registeredHandler')  )
                  ]
            <|> serveDirectory "resources/static"
 
