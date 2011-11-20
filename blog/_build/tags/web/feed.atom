@@ -16,7 +16,7 @@
       <name>Oliver Stollmann</name>
     </author>
     <content type="html">&lt;p&gt;I usually develop in Python, although that has more to do with the languages look-and-feel than anything else. After almost ten years of progamming I have come to the conclusion that that is one of the most important aspects of a language. If you like static-typing use something like Java/C#, if you don't use Python or Ruby or whatever else you like. Anyway that doesn't really matter right now (although I might try to write down my thoughts about this some time). The thing is that a few months ago I first had a look at &lt;a class="reference external" href="http://haskell.org"&gt;Haskell&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Haskell is a beauty. If Java is a Volswagen Golf and Python a BMW M3, then Haskell is a Porsche Carrera GT, incredible, but hard to drive. The second I finally understood what Haskell was about, I knew that it was going to become my go-to language in the future (once I get it :-). So after dabbling around for a while I thought it was time to have a look at how suited Haskell is for web development and that is where &lt;a class="reference external" href="http://snapframework.com/"&gt;the Snap Framework&lt;/a&gt; comes into play. From the site:&lt;/p&gt;
+&lt;p&gt;Haskell is a beauty. If Java is a Volswagen Golf and Python a BMW M3, then Haskell is a Porsche Carrera GT, incredible, but hard to drive. The second I finally understood what Haskell was about, I knew that it was going to become my go-to language in the future (once I get it :-). So after dabbling around for a while I thought it was time to have a look at how suited Haskell is for web development and that is where the &lt;a class="reference external" href="http://snapframework.com/"&gt;Snap Framework&lt;/a&gt; comes into play. From the site:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Snap is a simple web development framework for unix systems, written in the Haskell programming language. Snap has a high level of test coverage and is well-documented.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Installation was very easy:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;cabal install snap
@@ -24,11 +24,154 @@
 &lt;p&gt;So below are a few simple examples that I am playing with to get a hang of the framework before I can build a real project with it (already have an idea for that).&lt;/p&gt;
 &lt;div class="section" id="getting-the-request-method"&gt;
 &lt;h2&gt;Getting the request method&lt;/h2&gt;
-&lt;p&gt;The first thing I tried to figure out was how to get information about the request. Here is a request handler that simply prints out a requests HTTP method. With this as a basis it becomes pretty obvious how to extract other information such as the request URI, headers, etc.&lt;/p&gt;
+&lt;p&gt;The first thing I tried to figure out was how to get information about the request. Here is a request handler that simply prints out a request's HTTP method. With this as a basis it becomes pretty obvious how to extract other information such as the request URI, headers, etc.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;methodHandler&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
     &lt;span class="n"&gt;methodStr&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;rqMethod&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;$&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;getRequest&lt;/span&gt;
     &lt;span class="n"&gt;writeBS&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; &lt;span class="kt"&gt;B&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pack&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;methodStr&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="sc"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="using-different-handlers-with-the-same-route-depending-on-request-parameters"&gt;
+&lt;h2&gt;Using different handlers with the same route (depending on request parameters)&lt;/h2&gt;
+&lt;p&gt;Although you could use the above mentioned method of getting a request's method to handle these differently using cases or ifs/thens, there is an idiom for returning different responses depending on the request headers. It is based on the &amp;quot;&amp;lt;|&amp;gt;&amp;quot; function. Here is an example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;indexHandler&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt;  &lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="kt"&gt;GET&lt;/span&gt;  &lt;span class="n"&gt;indexGet&lt;/span&gt;
+            &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="kt"&gt;POST&lt;/span&gt; &lt;span class="n"&gt;indexPost&lt;/span&gt;
+            &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;errorHandler&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So what is going on here? Well it's actually pretty simple and entirely based on Snap's implementation of the &lt;a class="reference external" href="http://hackage.haskell.org/packages/archive/base/4.4.1.0/doc/html/Control-Applicative.html#v:-60--124--62-"&gt;Alternatives' &amp;quot;associative binary operator&amp;quot; (&amp;lt;|&amp;gt;)&lt;/a&gt;. The &lt;em&gt;&amp;lt;|&amp;gt;&lt;/em&gt; operator allows you to &lt;em&gt;try&lt;/em&gt; a certain handler, but specify following ones in case the former fails. This is what we are doing here. We are saying if the method is &lt;em&gt;GET&lt;/em&gt; use the &lt;em&gt;indexGet&lt;/em&gt; handler, if it is &lt;em&gt;POST&lt;/em&gt; use the &lt;em&gt;indexPost&lt;/em&gt; handler. If it is neither then use the &lt;em&gt;errorHandler&lt;/em&gt;. How is this done? Well here is the description of the method function:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;method&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="kt"&gt;MonadSnap&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="ow"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;Method&lt;/span&gt; &lt;span class="ow"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="ow"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;aSource&lt;/span&gt;
+&lt;span class="c1"&gt;-- Runs a Snap monad action only if the request&amp;#39;s HTTP method matches the given method.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So you give the method function a &lt;a class="reference external" href="http://hackage.haskell.org/packages/archive/snap-core/0.6.0.1/doc/html/Snap-Core.html#t:Method"&gt;Method&lt;/a&gt; and a handler, then the handler action will be completed if and only if the request's method is the same as the given one. If the methods do not matche the method function will call &lt;a class="reference external" href="http://hackage.haskell.org/packages/archive/snap-core/0.6.0.1/doc/html/Snap-Core.html#v:pass"&gt;pass&lt;/a&gt; and the handler will fail, resulting in the next handler being tried (&lt;em&gt;method POST indexPost&lt;/em&gt;). If you want to see how exactly this happens have a look the &lt;a class="reference external" href="http://hackage.haskell.org/packages/archive/snap-core/0.6.0.1/doc/html/src/Snap-Internal-Types.html#method"&gt;method function source&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;------------------------------------------------------------------------------&lt;/span&gt;
+&lt;span class="c1"&gt;-- | Runs a &amp;#39;Snap&amp;#39; monad action only if the request&amp;#39;s HTTP method matches&lt;/span&gt;
+&lt;span class="c1"&gt;-- the given method.&lt;/span&gt;
+&lt;span class="nf"&gt;method&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="kt"&gt;MonadSnap&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="ow"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;Method&lt;/span&gt; &lt;span class="ow"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="ow"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;
+&lt;span class="nf"&gt;method&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;action&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+    &lt;span class="n"&gt;req&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;getRequest&lt;/span&gt;
+    &lt;span class="n"&gt;unless&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rqMethod&lt;/span&gt; &lt;span class="n"&gt;req&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;pass&lt;/span&gt;
+    &lt;span class="n"&gt;action&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note that you can chain these &lt;em&gt;checks&lt;/em&gt; to create more advanced request handlers. See this extended example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;indexHandler&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt;  &lt;span class="n"&gt;ifTop&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="kt"&gt;GET&lt;/span&gt;  &lt;span class="n"&gt;indexGet&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ifTop&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="kt"&gt;POST&lt;/span&gt; &lt;span class="n"&gt;indexPost&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;errorHandler&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here we are not only checking the request method but also whether or not the request URI is &lt;em&gt;top&lt;/em&gt; (yes, I agree that this function name is not ideal). Here is the ifTop method description and type:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;ifTop&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="kt"&gt;MonadSnap&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="ow"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="ow"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;aSource&lt;/span&gt;
+&lt;span class="c1"&gt;-- Runs a Snap monad action only when rqPathInfo is empty.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What does this mean? Well &lt;em&gt;rqPathInfo&lt;/em&gt; return the request's URI's path part that is not covered by the route declaration. If your route is &amp;quot;/posts/2011/&amp;quot; a request for &amp;quot;/posts/2011/11/17/&amp;quot; may still be routed to the specified request handler. The difference will be that in the former case &lt;em&gt;rqPathInfo&lt;/em&gt; will return an empty string and in the latter case it will return &lt;em&gt;11/17/&lt;/em&gt;. So using &lt;em&gt;ifTop&lt;/em&gt; allows you to say &lt;em&gt;the request URI may not be longer than the one specified in the routing scheme&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;But to get back to the point of how to handle different request headers: what this is meant to show is that you can chain different types of request checks to route a request to the correct handler.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="complete-routing-example"&gt;
+&lt;h2&gt;Complete routing example&lt;/h2&gt;
+&lt;p&gt;Here is a complete routing and handling example for an application that I am currently developing:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;indexHandler&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ifTop&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="kt"&gt;GET&lt;/span&gt;  &lt;span class="n"&gt;indexHandler&amp;#39;&lt;/span&gt;
+                   &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;genericError&lt;/span&gt; &lt;span class="mi"&gt;405&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Method Not Allowed&amp;quot;&lt;/span&gt;
+               &lt;span class="p"&gt;)&lt;/span&gt;
+           &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;error404&lt;/span&gt; &lt;span class="c1"&gt;-- will catch any routing error (even for other request&lt;/span&gt;
+                         &lt;span class="c1"&gt;-- URIs as this is the fallback route &amp;quot;/&amp;quot;)&lt;/span&gt;
+
+&lt;span class="nf"&gt;generateHandler&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ifTop&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="kt"&gt;GET&lt;/span&gt; &lt;span class="n"&gt;generateHandler&amp;#39;&lt;/span&gt;
+                      &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;error405&lt;/span&gt;
+                  &lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="nf"&gt;registeredHandler&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ifTop&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="kt"&gt;GET&lt;/span&gt; &lt;span class="n"&gt;registeredHandler&amp;#39;&lt;/span&gt;
+                        &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;error405&lt;/span&gt;
+                    &lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="nf"&gt;indexHandler&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="c1"&gt;-- application logic&lt;/span&gt;
+  &lt;span class="n"&gt;writeBS&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; &lt;span class="kt"&gt;B&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pack&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;index page&amp;quot;&lt;/span&gt;
+
+&lt;span class="nf"&gt;generateHandler&amp;#39;&lt;/span&gt;  &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;expr&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;fromMaybe&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;$&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;getParam&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;expr&amp;quot;&lt;/span&gt;&lt;span class="nf"&gt;\&lt;/span&gt;
+  &lt;span class="c1"&gt;-- application logic&lt;/span&gt;
+  &lt;span class="n"&gt;writeBS&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; &lt;span class="n"&gt;append&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;B&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pack&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;API.generate: &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;expr&lt;/span&gt;
+
+&lt;span class="nf"&gt;registeredHandler&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;domain&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;fromMaybe&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;$&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;getParam&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;domain&amp;quot;&lt;/span&gt;
+  &lt;span class="c1"&gt;-- application logic&lt;/span&gt;
+  &lt;span class="n"&gt;writeBS&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; &lt;span class="n"&gt;append&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;B&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pack&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;API.registered: &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;domain&lt;/span&gt;
+
+&lt;span class="nf"&gt;error404&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="n"&gt;genericError&lt;/span&gt; &lt;span class="mi"&gt;404&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Not Found&amp;quot;&lt;/span&gt;
+&lt;span class="nf"&gt;error405&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="n"&gt;genericError&lt;/span&gt; &lt;span class="mi"&gt;405&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Method Not Allowed&amp;quot;&lt;/span&gt;
+
+&lt;span class="nf"&gt;genericError&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;modifyResponse&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; &lt;span class="n"&gt;setResponseStatus&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; &lt;span class="kt"&gt;B&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pack&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;
+  &lt;span class="n"&gt;writeBS&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; &lt;span class="kt"&gt;B&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pack&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="s"&gt;&amp;quot; - &amp;quot;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;getResponse&lt;/span&gt;
+  &lt;span class="n"&gt;finishWith&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt;
+
+&lt;span class="c1"&gt;------------------------------------------------------------------------------&lt;/span&gt;
+&lt;span class="c1"&gt;-- | The main entry point handler.&lt;/span&gt;
+&lt;span class="nf"&gt;site&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="kt"&gt;Application&lt;/span&gt; &lt;span class="nb"&gt;()&lt;/span&gt;
+&lt;span class="nf"&gt;site&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="n"&gt;route&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;                           &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;indexHandler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+             &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/api/generate/:expr/&amp;quot;&lt;/span&gt;        &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;generateHandler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+             &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/api/registered/:domain/&amp;quot;&lt;/span&gt;    &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;registeredHandler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+             &lt;span class="p"&gt;]&lt;/span&gt;
+       &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;serveDirectory&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;resources/static&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you can see these handlers combine both &lt;em&gt;method&lt;/em&gt; and &lt;em&gt;ifTop&lt;/em&gt; to check whether a request's HTTP method is right and whether or not the request URI contains additional unwanted path segements. Here are a few examples of requests and the server's response:&lt;/p&gt;
+&lt;dl class="docutils"&gt;
+&lt;dt&gt;::&lt;/dt&gt;
+&lt;dd&gt;&lt;p class="first"&gt;request:  GET /
+response: HTTP/1.1 200 OK&lt;/p&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 137)&lt;/p&gt;
+Unexpected indentation.&lt;/div&gt;
+&lt;blockquote&gt;
+index page&lt;/blockquote&gt;
+&lt;p&gt;request:  POST /
+response: HTTP/1.1 405 Method Not Allowed&lt;/p&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 141)&lt;/p&gt;
+Unexpected indentation.&lt;/div&gt;
+&lt;blockquote&gt;
+405 - Method Not Allowed&lt;/blockquote&gt;
+&lt;p&gt;request:  GET /api/
+response: HTTP/1.1 404 Not Found&lt;/p&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 145)&lt;/p&gt;
+Unexpected indentation.&lt;/div&gt;
+&lt;blockquote&gt;
+404 - Not Found&lt;/blockquote&gt;
+&lt;p&gt;request:  POST /api/
+response: HTTP/1.1 404 Not Found&lt;/p&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 149)&lt;/p&gt;
+Unexpected indentation.&lt;/div&gt;
+&lt;blockquote&gt;
+404 - Not Found&lt;/blockquote&gt;
+&lt;p&gt;request:  GET /api/generate/abc
+response: HTTP/1.1 200 OK&lt;/p&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 153)&lt;/p&gt;
+Unexpected indentation.&lt;/div&gt;
+&lt;blockquote&gt;
+API.generate: abc&lt;/blockquote&gt;
+&lt;p&gt;request:  PUT /api/registered/google.com
+response: HTTP/1.1 405 Method Not Allowed&lt;/p&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 157)&lt;/p&gt;
+Unexpected indentation.&lt;/div&gt;
+&lt;blockquote class="last"&gt;
+405 - Method Not Allowed&lt;/blockquote&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;Although the above method works as intended it is not as &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Don't_repeat_yourself"&gt;DRY&lt;/a&gt; as possible. Because the route function takes a handler as an argument we can actually do the &lt;em&gt;ifTop&lt;/em&gt; and &lt;em&gt;method&lt;/em&gt; checks in the route definition (and declare a &lt;em&gt;methodOrError405&lt;/em&gt; helper function):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;methodOrError405&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="kt"&gt;Method&lt;/span&gt; &lt;span class="ow"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;Application&lt;/span&gt; &lt;span class="nb"&gt;()&lt;/span&gt; &lt;span class="ow"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;Application&lt;/span&gt; &lt;span class="nb"&gt;()&lt;/span&gt;
+&lt;span class="nf"&gt;methodOrError405&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;
+                   &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;error405&lt;/span&gt;
+
+&lt;span class="nf"&gt;site&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="kt"&gt;Application&lt;/span&gt; &lt;span class="nb"&gt;()&lt;/span&gt;
+&lt;span class="nf"&gt;site&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="n"&gt;route&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;                           &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ifTop&lt;/span&gt; &lt;span class="n"&gt;indexHandler&lt;/span&gt;                               &lt;span class="p"&gt;)&lt;/span&gt;
+             &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/api/generate/:expr/&amp;quot;&lt;/span&gt;        &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ifTop&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;methodOrError405&lt;/span&gt; &lt;span class="kt"&gt;GET&lt;/span&gt; &lt;span class="n"&gt;generateHandler&amp;#39;&lt;/span&gt;  &lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="p"&gt;)&lt;/span&gt;
+             &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/api/registered/:domain/&amp;quot;&lt;/span&gt;    &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ifTop&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;methodOrError405&lt;/span&gt; &lt;span class="kt"&gt;GET&lt;/span&gt; &lt;span class="n"&gt;registeredHandler&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="p"&gt;)&lt;/span&gt;
+             &lt;span class="p"&gt;]&lt;/span&gt;
+       &lt;span class="o"&gt;&amp;lt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;serveDirectory&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;resources/static&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This produces the exact same results as above. &lt;em&gt;Note that we no longer define the handler as fooBar, but rather at fooBar' directly (without the checks).&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 </content>
   </entry>

@@ -1,4 +1,4 @@
-public: no
+public: yes 
 tags: [haskell, snap-framwork, web]
 
 Snap Framework Basics
